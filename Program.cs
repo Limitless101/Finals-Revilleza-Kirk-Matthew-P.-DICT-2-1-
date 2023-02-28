@@ -1,68 +1,96 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
-class EmployeeTimeKeeping {
-static void Main(string[] args) {
-DateTime startTime = new DateTime(2023, 2, 21, 8, 0, 0);
-DateTime endTime = new DateTime(2023, 2, 21, 17, 0, 0);
-TimeSpan gracePeriod = new TimeSpan(0, 30, 0);
+namespace final_exam
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("EMPLOYEE TIME KEEPING ");
+            Console.WriteLine("WELCOME!!! ");
+            DateTime companyStartTime = new DateTime(2023, 2,28, 8, 0, 0); //Date that will input here should be the date today
+            DateTime companyEndTime = new DateTime(2023, 2, 28, 17, 0, 0);//Date that will input here should be the date today
+            TimeSpan gracePeriod = new TimeSpan(0, 30, 0);
+            TimeSpan lunchBreak = new TimeSpan(1, 0, 0);
+            TimeSpan totalLateHours = new TimeSpan(0, 0, 0);
+            TimeSpan totalUndertimeHours = new TimeSpan(0, 0, 0);
+            TimeSpan totalOvertimeHours = new TimeSpan(0, 0, 0);
+            TimeSpan InitTime = new TimeSpan(0, 0, 0);
+            TimeSpan totalRegularHours = new TimeSpan(0, 0, 0);
+            TimeSpan totalWorkedHours = new TimeSpan(0, 0, 0);
+            TimeSpan RegularHours = new TimeSpan(8, 0, 0);
+            TimeSpan lateAmount = new TimeSpan(0, 0, 0);
+            TimeSpan undertimeAmount = new TimeSpan(0, 0, 0);
+            TimeSpan hoursWorked = new TimeSpan(0, 0, 0);
 
-    Console.Write("Enter employee time-in: ");
-    DateTime timeIn = DateTime.Parse(Console.ReadLine());
-    Console.Write("Enter employee time-out: ");
-    DateTime timeOut = DateTime.Parse(Console.ReadLine());
-    Console.Write("Enter employee hourly rate: ");
-    double hourlyRate = double.Parse(Console.ReadLine());
+            Console.WriteLine("Input working days: ");
+            int workingDays = Convert.ToInt32(Console.ReadLine());
 
-    TimeSpan hoursWorked = timeOut - timeIn;
-    DateTime regularStartTime = startTime.Add(gracePeriod);
-    DateTime regularEndTime = endTime.Subtract(gracePeriod);
-    TimeSpan regularHours = new TimeSpan();
-    if (timeIn < regularStartTime) {
-        regularHours = regularHours.Add(regularStartTime - timeIn);
-    }
-    if (timeOut > regularEndTime) {
-        regularHours = regularHours.Add(timeOut - regularEndTime);
-    }
-    regularHours = regularHours.Add(regularEndTime - regularStartTime);
+            for (int a = 0; a < workingDays; a++)
 
-    Console.Write("Enter employee lunch break time-out: ");
-    DateTime lunchBreakTimeOut = DateTime.Parse(Console.ReadLine());
-    Console.Write("Enter employee lunch break time-in: ");
-    DateTime lunchBreakTimeIn = DateTime.Parse(Console.ReadLine());
-    TimeSpan lunchBreakHours = new TimeSpan();
-    if (timeIn < lunchBreakTimeOut && timeOut > lunchBreakTimeIn) {
-        lunchBreakHours = lunchBreakTimeIn - lunchBreakTimeOut;
-    }
+            {
+                Console.WriteLine("");
+                Console.WriteLine("Please input Time-In:(Military Time) ");
 
-    TimeSpan lateTime = new TimeSpan();
-    if (timeIn > regularStartTime) {
-        lateTime = timeIn - regularStartTime;
-    }
-    TimeSpan undertime = new TimeSpan();
-    if (timeOut < regularEndTime) {
-        undertime = regularEndTime - timeOut;
-    }
-    TimeSpan overtime = new TimeSpan();
-    if (timeOut > endTime) {
-        overtime = timeOut - endTime;
-    }
+                DateTime startTime = DateTime.Parse(Console.ReadLine());
+                Console.WriteLine("Please Input Time-out:(Military Time) ");
+                DateTime endTime = DateTime.Parse(Console.ReadLine());
 
+
+                hoursWorked = endTime - startTime - lunchBreak;
+
+                Console.WriteLine("Total Hours Worked today: " + hoursWorked);
+
+                DateTime startTimeGracePeriod = companyStartTime + gracePeriod;
+                DateTime overTimeGracePeriod = companyEndTime + gracePeriod;
+
+
+                if (startTime > startTimeGracePeriod)
+                {
+                    lateAmount = startTime - companyStartTime;
+                    Console.WriteLine("The Employee is Late");
+                    Console.WriteLine("Late Hours: " + lateAmount);
+                }
+
+                if (endTime < companyEndTime)
+                {
+                    undertimeAmount = companyEndTime - endTime;
+                    Console.WriteLine("The Employee is Undertime");
+                    Console.WriteLine("Undertime Hours: " + undertimeAmount);
+                }
+
+                else if (endTime >= overTimeGracePeriod)
+                {
+                    TimeSpan overtimeAmount = endTime - companyEndTime;
+                    Console.WriteLine("The Employee is Overtime");
+                    Console.WriteLine("Overtime Hours: " + overtimeAmount);
+
+                }
+
+                if (lateAmount == InitTime && undertimeAmount == InitTime)
+                {
+                    totalRegularHours = totalRegularHours + RegularHours;
+                }
+
+                totalWorkedHours = hoursWorked + totalWorkedHours;
+            }
+            
+                Console.WriteLine("");
+                Console.WriteLine("Total Number of Hours Worked: " + totalWorkedHours);
+                Console.WriteLine("Total Regular Hours Worked: " + totalRegularHours);
+
+            
+
+            Console.ReadLine();
+        }
+       
     
-    double regularPay = regularHours.TotalHours * hourlyRate;
-    double overtimePay = overtime.TotalHours * hourlyRate * 1.5;
-    double totalPay = regularPay + overtimePay;
-
-    
-    Console.WriteLine("Hours worked: " + hoursWorked.TotalHours);
-    Console.WriteLine("Regular hours worked: " + regularHours.TotalHours);
-    Console.WriteLine("Lunch break hours: " + lunchBreakHours.TotalHours);
-    Console.WriteLine("Late time: " + lateTime.TotalMinutes + " minutes");
-    Console.WriteLine("Undertime: " + undertime.TotalMinutes + " minutes");
-    Console.WriteLine("Overtime: " + overtime.TotalHours + " hours");
-    Console.WriteLine("Regular pay: $" + regularPay);
-    Console.WriteLine("Overtime pay: $" + overtimePay);
-    Console.WriteLine("Total pay: $" + totalPay);
-
-    Console.ReadLine();
 }
 }
+
+
